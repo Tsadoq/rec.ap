@@ -88,3 +88,6 @@ class Recapper():
         print(f"The summary is the {round(len(self.summary) / len(self.text) * 100)}% of the original")
         print(self.recap) if recap == True else False
 
+    def dependencies_and_licence(self):
+        message = "The current software uses the spacy and newspaper3k libraries, both under MIT Licence\n"+"newspaper3k -> https://github.com/codelucas/newspaper/blob/master/LICENSE\n"+"spacy -> https://github.com/explosion/spaCy/blob/master/LICENSE"
+        return message
