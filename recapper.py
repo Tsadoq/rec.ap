@@ -88,7 +88,3 @@ class Recapper():
         print(f"The summary is the {round(len(self.summary) / len(self.text) * 100)}% of the original")
         print(self.recap) if recap == True else False
 
-
-r = Recapper("randommessage")
-r.process()
-print(r.summarize(0.3))
