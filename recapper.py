@@ -9,8 +9,10 @@ import re
 class Recapper():
 
     def __init__(self, url):
-
         try:
+            pattern = re.compile("^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$")
+            if not pattern.match(url):
+                print(f"{url} is not a valid url")
             self.url = url
             self.article = Article(self.url)
             self.article.download()
@@ -39,6 +41,7 @@ class Recapper():
             self.vectorizer = TfidfVectorizer(strip_accents='unicode')
         except article.ArticleException:
             print(f"The url {url} is not supported, please write to email@towrite.it for further help")
+            self.valid=False
 
     def process(self):
         try:
@@ -61,16 +64,22 @@ class Recapper():
                 {"Sentence": self.data, "Score": self.frequencies.mean(axis=1)})
             self.recap["Rank"] = self.recap["Score"].rank(method="first", ascending=False)
             self.tfidf_sorting = np.argsort(fq.toarray()).flatten()[::-1]
-        except ValueError:
+        except (ValueError,AttributeError):
             print(
                 f"The text at {self.url} could not be processed, please write to mail@email.com to have further help")
 
     def summarize(self, perc=0.3):
-        n_sentences = round(len(self.recap) * perc)
-        self.summary = "\n".join(
-            (self.recap.loc[(self.recap['Rank'] <= n_sentences) | (self.recap['Rank'] == self.recap["Rank"].iloc[0])])[
-                "Sentence"])
-        return self.summary
+        try:
+            n_sentences = round(len(self.recap) * perc)
+            self.summary = "\n".join(
+                (self.recap.loc[
+                    (self.recap['Rank'] <= n_sentences) | (self.recap['Rank'] == self.recap["Rank"].iloc[0])])[
+                    "Sentence"])
+            return self.summary
+        except (ValueError,AttributeError):
+            message="Some errors occured during the processing and or the creation of the object"
+            print(message)
+            return message
 
     def get_info(self, n=5, recap=False):
         feature_array = np.array(self.vectorizer.get_feature_names())
@@ -80,6 +89,6 @@ class Recapper():
         print(self.recap) if recap == True else False
 
 
-r = Recapper("https://www.lastampa.it/cronaca/2020/02/23/news/coronavirus-crescono-i-casi-in-lombardia-ora-i-contagiati-sono-89-1.38506280")
+r = Recapper("randommessage")
 r.process()
 print(r.summarize(0.3))
