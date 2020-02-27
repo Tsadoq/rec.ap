@@ -20,7 +20,7 @@ class Recapper():
             self.author = self.article.authors
             self.oneline = self.article.summary
             self.text = self.article.text.replace("\n", "")
-            if self.article.meta_lang == 'en':
+            if self.article.meta_lang == 'en' or (self.article.meta_lang == '' and url.find("cnn.com",0,10)):
                 import en_core_web_sm
                 self.model = en_core_web_sm.load()
             elif self.article.meta_lang == 'it':
