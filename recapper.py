@@ -36,7 +36,7 @@ class Recapper():
                 import pt_core_news_sm
                 self.model = pt_core_news_sm.load()
             else:
-                print(f"{self.article.meta_lang} language not supported")
+                print(f"The {self.article.meta_lang} language is not supported")
             self.data = []
             self.vectorizer = TfidfVectorizer(strip_accents='unicode')
         except article.ArticleException:
