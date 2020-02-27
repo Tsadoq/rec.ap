@@ -71,7 +71,7 @@ class Recapper():
     def summarize(self, perc=0.3):
         try:
             n_sentences = round(len(self.recap) * perc)
-            self.summary = "\n".join(
+            self.summary = ". ".join(
                 (self.recap.loc[
                     (self.recap['Rank'] <= n_sentences) | (self.recap['Rank'] == self.recap["Rank"].iloc[0])])[
                     "Sentence"])
